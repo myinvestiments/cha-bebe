@@ -3,296 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎉 Chá de Bebê do David</title>
+  <title>Chá de Bebê do David</title>
   <style>
-    /* ===== FUNDO ANIMADO ===== */
     body { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 700px; 
+      font-family: Arial, sans-serif; 
+      max-width: 600px; 
       margin: auto; 
       padding: 20px; 
-      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
-      min-height: 100vh;
-      animation: fundoAnimado 8s ease-in-out infinite alternate;
+      background: #fce4ec;
     }
-
-    @keyframes fundoAnimado {
-      0% { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
-      50% { background: linear-gradient(135deg, #bbdefb, #64b5f6); }
-      100% { background: linear-gradient(135deg, #90caf9, #42a5f5); }
-    }
-
-    /* ===== TÍTULO ===== */
     h1 { 
       text-align: center; 
-      color: #0d47a1;
-      font-size: 2.5em;
-      text-shadow: 2px 2px 4px rgba(13, 71, 161, 0.3);
-      animation: tituloPula 2s ease-in-out infinite;
+      color: #d81b60; 
     }
-
-    @keyframes tituloPula {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-
-    /* ===== CARDS ===== */
     .card { 
-      border: none; 
-      padding: 25px; 
-      margin: 20px 0; 
-      border-radius: 20px; 
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 8px 32px rgba(13, 71, 161, 0.2);
-      backdrop-filter: blur(10px);
-      transition: transform 0.3s ease;
+      border: 1px solid #f8bbd0; 
+      padding: 20px; 
+      margin: 15px 0; 
+      border-radius: 10px; 
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
-    .card:hover {
-      transform: translateY(-3px);
-    }
-
-    /* ===== BOTÕES ===== */
     button { 
-      background: linear-gradient(135deg, #1a73e8, #0d47a1);
+      background: #d81b60; 
       color: white; 
       border: none; 
-      padding: 14px 30px; 
-      border-radius: 50px; 
+      padding: 12px 25px; 
+      border-radius: 5px; 
       cursor: pointer; 
-      font-size: 17px;
-      font-weight: bold;
+      font-size: 16px;
       margin-top: 10px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(13, 71, 161, 0.3);
     }
-
     button:hover { 
-      transform: scale(1.05);
-      box-shadow: 0 6px 25px rgba(13, 71, 161, 0.5);
-      background: linear-gradient(135deg, #0d47a1, #0a3a82);
+      background: #ad1457; 
     }
-
-    /* ===== LISTA DE PRESENTES ===== */
     .presente { 
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      background: #fce4ec; 
       padding: 15px; 
-      margin: 12px 0; 
-      border-radius: 15px; 
-      border-left: 5px solid #0d47a1;
+      margin: 10px 0; 
+      border-radius: 8px; 
+      border-left: 4px solid #d81b60;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.3s ease;
-      animation: presenteEntra 0.5s ease-out;
     }
-
-    @keyframes presenteEntra {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .presente:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 15px rgba(13, 71, 161, 0.2);
-    }
-
     .presente button {
-      padding: 8px 20px;
+      padding: 8px 15px;
       font-size: 14px;
       margin-top: 0;
-      background: linear-gradient(135deg, #42a5f5, #0d47a1);
     }
-
-    /* ===== INPUT ===== */
     input { 
-      padding: 12px; 
+      padding: 10px; 
       width: 100%; 
       margin: 5px 0 10px 0; 
-      border: 2px solid #90caf9;
-      border-radius: 50px;
+      border: 1px solid #f8bbd0;
+      border-radius: 5px;
       font-size: 16px;
       box-sizing: border-box;
-      transition: all 0.3s ease;
     }
-
     input:focus {
-      outline: none;
-      border-color: #0d47a1;
-      box-shadow: 0 0 20px rgba(13, 71, 161, 0.2);
-      transform: scale(1.01);
+      outline: 2px solid #d81b60;
+      border: none;
     }
-
-    /* ===== MENSAGENS ===== */
     .mensagem {
-      color: #0d47a1;
+      color: #2e7d32;
       font-weight: bold;
       margin-top: 10px;
-      font-size: 18px;
-      animation: pisca 1.5s ease-in-out 3;
     }
-
-    @keyframes pisca {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
     .erro {
       color: #c62828;
     }
-
     .subtotal {
       text-align: center;
-      color: #0d47a1;
-      font-size: 16px;
+      color: #666;
+      font-size: 14px;
       margin-top: 10px;
-      font-weight: bold;
     }
-
-    /* ===== PANDA DECORATIVO ===== */
-    .pandas {
-      text-align: center;
-      font-size: 60px;
-      animation: pandaBaila 3s ease-in-out infinite;
-      letter-spacing: 15px;
-    }
-
-    @keyframes pandaBaila {
-      0%, 100% { transform: rotate(-5deg) scale(1); }
-      50% { transform: rotate(5deg) scale(1.1); }
-    }
-
-    .pandas-pequenos {
-      text-align: center;
-      font-size: 30px;
-      letter-spacing: 10px;
-      animation: pandaGira 6s linear infinite;
-    }
-
-    @keyframes pandaGira {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* ===== BALÕES ===== */
-    .balao {
-      display: inline-block;
-      animation: sobeBalao 3s ease-in-out infinite;
-    }
-
-    @keyframes sobeBalao {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-    }
-
-    /* ===== CONFIRMADO ===== */
     .confirmado {
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      padding: 12px;
-      border-radius: 50px;
-      border: 2px solid #4caf50;
+      background: #e8f5e9;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #4caf50;
+    }
+    .emoji-grande {
+      font-size: 50px;
       text-align: center;
-      font-weight: bold;
-      color: #2e7d32;
-      animation: confirmaAnim 1s ease-out;
-    }
-
-    @keyframes confirmaAnim {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    /* ===== CONFETTI ===== */
-    .confetti {
-      font-size: 20px;
-      animation: confettiCai 2s linear infinite;
-    }
-
-    @keyframes confettiCai {
-      0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translateY(20px) rotate(360deg); opacity: 0; }
-    }
-
-    /* ===== FRASE DE EFEITO ===== */
-    .frase-efeito {
-      text-align: center;
-      font-size: 20px;
-      color: #0d47a1;
-      font-weight: bold;
-      animation: textoPisca 2s ease-in-out infinite;
-    }
-
-    @keyframes textoPisca {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    /* ===== RESPONSIVO ===== */
-    @media (max-width: 500px) {
-      h1 { font-size: 1.8em; }
-      .pandas { font-size: 40px; }
-      .presente { flex-direction: column; text-align: center; }
-      .presente button { margin-top: 10px; }
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <!-- ===== PANDA DECORATIVO ===== -->
-  <div class="pandas">
-    🐼 🎈 🐼 🎈 🐼
-  </div>
+  <span class="emoji-grande">🐼</span>
+  <h1>🎉 Chá de Bebê do David</h1>
+  <p style="text-align: center; color: #666;">Confirme sua presença e escolha um presente!</p>
 
-  <!-- ===== TÍTULO ===== -->
-  <h1>🎉 Chá de Bebê do David 🎉</h1>
-
-  <!-- ===== FRASE DE EFEITO ===== -->
-  <div class="frase-efeito">
-    🍼 Um novo bebê está chegando! Vamos celebrar! 🍼
-  </div>
-
-  <!-- ===== SUBTÍTULO COM BALÕES ===== -->
-  <p style="text-align: center; color: #1565c0; font-size: 18px;">
-    <span class="balao">🎈</span> Confirme sua presença e escolha um presente!
-    <span class="balao">🎈</span>
-  </p>
-
-  <!-- ===== CONFETTI RODANDO ===== -->
-  <div style="text-align: center; font-size: 14px; color: #0d47a1;">
-    <span class="confetti">✨</span>
-    <span class="confetti" style="animation-delay: 0.5s;">✨</span>
-    <span class="confetti" style="animation-delay: 1s;">✨</span>
-    <span class="confetti" style="animation-delay: 1.5s;">✨</span>
-  </div>
-
-  <!-- ===== PASSO 1: CONFIRMAR NOME ===== -->
+  <!-- PASSO 1: CONFIRMAR NOME -->
   <div class="card">
-    <h2 style="color: #0d47a1;">📋 Confirme sua presença</h2>
+    <h2>📋 Confirme sua presença</h2>
     <input type="text" id="nomeConvidado" placeholder="Digite seu nome completo">
     <button onclick="confirmarPresenca()">✅ Confirmar presença</button>
     <p id="msgConfirmacao" class="mensagem"></p>
   </div>
 
-  <!-- ===== PASSO 2: LISTA DE PRESENTES ===== -->
+  <!-- PASSO 2: LISTA DE PRESENTES -->
   <div class="card">
-    <h2 style="color: #0d47a1;">🎁 Lista de Presentes</h2>
+    <h2>🎁 Lista de Presentes</h2>
     <div id="listaPresentes" style="min-height: 100px;">
-      <p style="color: #90caf9; text-align: center; font-size: 18px;">🐼 Confirme seu nome para ver a lista 🐼</p>
+      <p style="color: #999;">Confirme seu nome para ver a lista</p>
     </div>
     <p id="contadorPresentes" class="subtotal"></p>
   </div>
 
-  <!-- ===== PANDA DECORATIVO RODAPÉ ===== -->
-  <div class="pandas-pequenos" style="margin-top: 20px;">
-    🐼 🎀 🐼 🎀 🐼
-  </div>
-
-  <p style="text-align: center; color: #0d47a1; font-weight: bold; margin-top: 10px;">
-    💙 Com muito amor, família David 💙
-  </p>
-
-  <!-- ===== FIREBASE ===== -->
+  <!-- FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
@@ -300,7 +123,7 @@
     // =============================================
     // 🔥 COLE SUA CONFIGURAÇÃO DO FIREBASE AQUI
     // =============================================
-    rules_version = '2';
+   rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
@@ -331,21 +154,25 @@ service cloud.firestore {
       }
 
       try {
+        // Procura se o convidado já existe
         const snapshot = await db.collection("convidados")
           .where("nome", "==", nome)
           .get();
 
         if (snapshot.empty) {
+          // Se não existe, cria um novo
           await db.collection("convidados").add({
             nome: nome,
             confirmado: true,
             presenteEscolhido: ""
           });
         } else {
+          // Se existe, atualiza
           const doc = snapshot.docs[0];
           await db.collection("convidados").doc(doc.id).update({
             confirmado: true
           });
+          // Pega o presente que ele já escolheu (se tiver)
           const dados = snapshot.docs[0].data();
           if (dados.presenteEscolhido) {
             presenteEscolhido = dados.presenteEscolhido;
@@ -354,8 +181,9 @@ service cloud.firestore {
 
         nomeAtual = nome;
         msg.className = 'mensagem';
-        msg.innerHTML = `✅ ${nome}, você está confirmado! Agora escolha um presente. 🎉🐼`;
+        msg.innerHTML = `✅ ${nome}, você está confirmado! Agora escolha um presente. 🎉`;
         
+        // Recarrega a lista
         carregarPresentes();
 
       } catch (erro) {
@@ -372,6 +200,7 @@ service cloud.firestore {
       const contador = document.getElementById('contadorPresentes');
 
       try {
+        // Só busca os presentes DISPONÍVEIS
         const snapshot = await db.collection("presentes")
           .where("disponivel", "==", true)
           .get();
@@ -379,13 +208,15 @@ service cloud.firestore {
         const total = snapshot.size;
 
         if (total === 0) {
-          div.innerHTML = '🎉🎊 Todos os presentes já foram escolhidos! Muito obrigado! 🙏🐼';
+          div.innerHTML = '🎉🎊 Todos os presentes já foram escolhidos! Muito obrigado! 🙏';
           contador.innerHTML = '';
           return;
         }
 
-        contador.innerHTML = `📦 ${total} presente(s) disponível(is) 🐼`;
+        // Mostra quantos presentes restam
+        contador.innerHTML = `📦 ${total} presente(s) disponível(is)`;
 
+        // Monta a lista
         div.innerHTML = '';
         snapshot.forEach(doc => {
           const presente = doc.data();
@@ -395,9 +226,9 @@ service cloud.firestore {
           item.className = 'presente';
           item.innerHTML = `
             <div>
-              <strong style="color: #0d47a1; font-size: 18px;">🎁 ${presente.nome}</strong>
+              <strong>${presente.nome}</strong>
               <br>
-              <span style="font-size: 14px; color: #1565c0;">${presente.descricao || ''}</span>
+              <span style="font-size: 14px; color: #666;">${presente.descricao || ''}</span>
             </div>
             <button onclick="escolherPresente('${id}', '${presente.nome}')">🎁 Escolher</button>
           `;
@@ -424,18 +255,21 @@ service cloud.firestore {
 
       if (presenteEscolhido) {
         msg.className = 'mensagem erro';
-        msg.innerHTML = `❌ Você já escolheu "${presenteEscolhido}". Só pode escolher um presente! 🐼`;
+        msg.innerHTML = `❌ Você já escolheu "${presenteEscolhido}". Só pode escolher um presente!`;
         return;
       }
 
-      if (!confirm(`🎁 Você quer escolher "${nomePresente}"? 🐼`)) return;
+      // Confirmação
+      if (!confirm(`🎁 Você quer escolher "${nomePresente}"?`)) return;
 
       try {
+        // 1 - Marca o presente como INDISPONÍVEL
         await db.collection("presentes").doc(idPresente).update({
           disponivel: false,
           escolhidoPor: nomeAtual
         });
 
+        // 2 - Salva no convidado qual presente ele escolheu
         const snapshot = await db.collection("convidados")
           .where("nome", "==", nomeAtual)
           .get();
@@ -449,8 +283,9 @@ service cloud.firestore {
         }
 
         msg.className = 'mensagem';
-        msg.innerHTML = `✅ Você escolheu "${nomePresente}"! Muito obrigado! 🎉🐼❤️`;
+        msg.innerHTML = `✅ Você escolheu "${nomePresente}"! Muito obrigado! 🎉❤️`;
         
+        // Recarrega a lista (o presente some)
         carregarPresentes();
 
       } catch (erro) {
@@ -460,7 +295,7 @@ service cloud.firestore {
     }
 
     // =============================================
-    // INICIALIZA
+    // INICIALIZA: carrega os presentes ao abrir
     // =============================================
     window.onload = function() {
       carregarPresentes();
