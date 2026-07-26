@@ -3,34 +3,304 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chá de Bebê - David</title>
+  <title>Chá de Bebê do David</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
+    body { 
+      font-family: Arial, sans-serif; 
+      max-width: 600px; 
+      margin: auto; 
+      padding: 20px; 
+      background: #fce4ec;
+    }
+    h1 { 
+      text-align: center; 
+      color: #d81b60; 
+    }
+    .card { 
+      border: 1px solid #f8bbd0; 
+      padding: 20px; 
+      margin: 15px 0; 
+      border-radius: 10px; 
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    button { 
+      background: #d81b60; 
+      color: white; 
+      border: none; 
+      padding: 12px 25px; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover { 
+      background: #ad1457; 
+    }
+    .presente { 
+      background: #fce4ec; 
+      padding: 15px; 
+      margin: 10px 0; 
+      border-radius: 8px; 
+      border-left: 4px solid #d81b60;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .presente button {
+      padding: 8px 15px;
+      font-size: 14px;
+      margin-top: 0;
+    }
+    input { 
+      padding: 10px; 
+      width: 100%; 
+      margin: 5px 0 10px 0; 
+      border: 1px solid #f8bbd0;
+      border-radius: 5px;
+      font-size: 16px;
       box-sizing: border-box;
     }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-      padding: 20px;
-      min-height: 100vh;
+    input:focus {
+      outline: 2px solid #d81b60;
+      border: none;
     }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(13, 71, 161, 0.2);
-      border: 2px solid #64b5f6;
-      position: relative;
-      overflow: hidden;
+    .mensagem {
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .erro {
+      color: #c62828;
+    }
+    .subtotal {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .confirmado {
+      background: #e8f5e9;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #4caf50;
+    }
+    .emoji-grande {
+      font-size: 50px;
+      text-align: center;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <span class="emoji-grande">🐼</span>
+  <h1>🎉 Chá de Bebê do David</h1>
+  <p style="text-align: center; color: #666;">Confirme sua presença e escolha um presente!</p>
+
+  <!-- PASSO 1: CONFIRMAR NOME -->
+  <div class="card">
+    <h2>📋 Confirme sua presença</h2>
+    <input type="text" id="nomeConvidado" placeholder="Digite seu nome completo">
+    <button onclick="confirmarPresenca()">✅ Confirmar presença</button>
+    <p id="msgConfirmacao" class="mensagem"></p>
+  </div>
+
+  <!-- PASSO 2: LISTA DE PRESENTES -->
+  <div class="card">
+    <h2>🎁 Lista de Presentes</h2>
+    <div id="listaPresentes" style="min-height: 100px;">
+      <p style="color: #999;">Confirme seu nome para ver a lista</p>
+    </div>
+    <p id="contadorPresentes" class="subtotal"></p>
+  </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // =============================================
+    // 🔥 COLE SUA CONFIGURAÇÃO DO FIREBASE AQUI
+    // =============================================
+   rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+    // =============================================
+
+    // Inicializa o Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let nomeAtual = "";
+    let presenteEscolhido = "";
+
+    // =============================================
+    // FUNÇÃO 1: Confirmar presença
+    // =============================================
+    async function confirmarPresenca() {
+      const nome = document.getElementById('nomeConvidado').value.trim();
+      const msg = document.getElementById('msgConfirmacao');
+
+      if (!nome) {
+        msg.className = 'mensagem erro';
+        msg.innerHTML = '❌ Digite seu nome primeiro!';
+        return;
+      }
+
+      try {
+        // Procura se o convidado já existe
+        const snapshot = await db.collection("convidados")
+          .where("nome", "==", nome)
+          .get();
+
+        if (snapshot.empty) {
+          // Se não existe, cria um novo
+          await db.collection("convidados").add({
+            nome: nome,
+            confirmado: true,
+            presenteEscolhido: ""
+          });
+        } else {
+          // Se existe, atualiza
+          const doc = snapshot.docs[0];
+          await db.collection("convidados").doc(doc.id).update({
+            confirmado: true
+          });
+          // Pega o presente que ele já escolheu (se tiver)
+          const dados = snapshot.docs[0].data();
+          if (dados.presenteEscolhido) {
+            presenteEscolhido = dados.presenteEscolhido;
+          }
+        }
+
+        nomeAtual = nome;
+        msg.className = 'mensagem';
+        msg.innerHTML = `✅ ${nome}, você está confirmado! Agora escolha um presente. 🎉`;
+        
+        // Recarrega a lista
+        carregarPresentes();
+
+      } catch (erro) {
+        msg.className = 'mensagem erro';
+        msg.innerHTML = '❌ Erro: ' + erro.message;
+      }
     }
 
-    /* ===== PANDA ANIMADO ===== */
-    .panda-top {
-      text-align: center;
-      font-size: 60px;
-      animation: pandaPula 2s infinite ease-in-out;
-      display: block;
+    // =============================================
+    // FUNÇÃO 2: Carregar lista de presentes
+    // =============================================
+    async function carregarPresentes() {
+      const div = document.getElementById('listaPresentes');
+      const contador = document.getElementById('contadorPresentes');
+
+      try {
+        // Só busca os presentes DISPONÍVEIS
+        const snapshot = await db.collection("presentes")
+          .where("disponivel", "==", true)
+          .get();
+
+        const total = snapshot.size;
+
+        if (total === 0) {
+          div.innerHTML = '🎉🎊 Todos os presentes já foram escolhidos! Muito obrigado! 🙏';
+          contador.innerHTML = '';
+          return;
+        }
+
+        // Mostra quantos presentes restam
+        contador.innerHTML = `📦 ${total} presente(s) disponível(is)`;
+
+        // Monta a lista
+        div.innerHTML = '';
+        snapshot.forEach(doc => {
+          const presente = doc.data();
+          const id = doc.id;
+
+          const item = document.createElement('div');
+          item.className = 'presente';
+          item.innerHTML = `
+            <div>
+              <strong>${presente.nome}</strong>
+              <br>
+              <span style="font-size: 14px; color: #666;">${presente.descricao || ''}</span>
+            </div>
+            <button onclick="escolherPresente('${id}', '${presente.nome}')">🎁 Escolher</button>
+          `;
+          div.appendChild(item);
+        });
+
+      } catch (erro) {
+        div.innerHTML = '❌ Erro ao carregar presentes: ' + erro.message;
+        contador.innerHTML = '';
+      }
+    }
+
+    // =============================================
+    // FUNÇÃO 3: Escolher um presente
+    // =============================================
+    async function escolherPresente(idPresente, nomePresente) {
+      const msg = document.getElementById('msgConfirmacao');
+
+      if (!nomeAtual) {
+        msg.className = 'mensagem erro';
+        msg.innerHTML = '❌ Confirme seu nome primeiro!';
+        return;
+      }
+
+      if (presenteEscolhido) {
+        msg.className = 'mensagem erro';
+        msg.innerHTML = `❌ Você já escolheu "${presenteEscolhido}". Só pode escolher um presente!`;
+        return;
+      }
+
+      // Confirmação
+      if (!confirm(`🎁 Você quer escolher "${nomePresente}"?`)) return;
+
+      try {
+        // 1 - Marca o presente como INDISPONÍVEL
+        await db.collection("presentes").doc(idPresente).update({
+          disponivel: false,
+          escolhidoPor: nomeAtual
+        });
+
+        // 2 - Salva no convidado qual presente ele escolheu
+        const snapshot = await db.collection("convidados")
+          .where("nome", "==", nomeAtual)
+          .get();
+
+        if (!snapshot.empty) {
+          const doc = snapshot.docs[0];
+          await db.collection("convidados").doc(doc.id).update({
+            presenteEscolhido: nomePresente
+          });
+          presenteEscolhido = nomePresente;
+        }
+
+        msg.className = 'mensagem';
+        msg.innerHTML = `✅ Você escolheu "${nomePresente}"! Muito obrigado! 🎉❤️`;
+        
+        // Recarrega a lista (o presente some)
+        carregarPresentes();
+
+      } catch (erro) {
+        msg.className = 'mensagem erro';
+        msg.innerHTML = '❌ Erro: ' + erro.message;
+      }
+    }
+
+    // =============================================
+    // INICIALIZA: carrega os presentes ao abrir
+    // =============================================
+    window.onload = function() {
+      carregarPresentes();
+    };
+  </script>
+
+</body>
+</html>
