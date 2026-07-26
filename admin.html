@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Chá do David</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(13, 71, 161, 0.2);
+      border: 2px solid #64b5f6;
+    }
+    h1 {
+      color: #0d47a1;
+      text-align: center;
+      font-size: 28px;
+    }
+    .subtitulo {
+      text-align: center;
+      color: #42a5f5;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .card {
+      background: #e8f0fe;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 5px solid #1e88e5;
+    }
+    .card h2 {
+      font-size: 18px;
+      color: #0d47a1;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      background: #0d47a1;
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #bbdefb;
+    }
+    tr:hover {
+      background: #bbdefb;
+    }
+    .confirmado { color: #1b5e20; font-weight: bold; }
+    .nao-confirmado { color: #c62828; }
+    .presente {
+      background: #1e88e5;
+      color: white;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .sem-presente { color: #90caf9; font-size: 12px; }
+    .btn-voltar {
+      background: linear-gradient(135deg, #1e88e5, #0d47a1);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .btn-voltar:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 15px rgba(13, 71, 161, 0.3);
+    }
+    .loading { text-align: center; color: #64b5f6; padding: 20px; }
+    .badge {
+      background: #1e88e5;
+      color: white;
+      padding: 2px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+    .panda-top { text-align: center; font-size: 40px; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="panda-top">🐼</div>
+    <h1>🔐 Painel Admin - David</h1>
+    <p class="subtitulo">👶💙 Controle do Chá de Bebê</p>
+
+    <button class="btn-voltar" onclick="window.location.href='index.html'">⬅ Voltar para o convite</button>
+
+    <div class="card">
+      <h2>📋 Convidados <span class="badge" id="totalConvidados">0</span></h2>
+      <div id="listaConvidados"><div class="loading">⏳ Carregando...</div></div>
+    </div>
+
+    <div class="card">
+      <h2>🎁 Presentes Escolhidos</h2>
+      <div id="listaPresentesEscolhidos"><div class="loading">⏳ Carregando...</div></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // ================================================================
+    // 🔥 SUA CONFIGURAÇÃO DO FIREBASE (A MESMA DO INDEX)
+    // ================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyB2p7RxLAzShjQSEkxmo6iCkYkxD9uZayBc",
+      authDomain: "chadodavid.firebaseapp.com",
+      projectId: "chadodavid",
+      storageBucket: "chadodavid.firebasehosting.app",
+      messagingSenderId: "476758736299"
+    };
+    // ================================================================
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function carregarConvidados() {
+      const div = document.getElementById('listaConvidados');
+      const total = document.getElementById('totalConvidados');
+
+      try {
+        const snapshot = await db.collection("convidados").get();
+        total.textContent = snapshot.size;
+
+        if (snapshot.empty) {
+          div.innerHTML = '<p style="color:#90caf9;">Nenhum convidado ainda.</p>';
+          return;
+        }
+
+        let html = `<table><thead><tr><th>#</th><th>Nome</th><th>Confirmou?</th><th>Presente</th></tr></thead><tbody>`;
+        let i = 1;
+        snapshot.forEach(doc => {
+          const dados = doc.data();
+          html += `
+            <tr>
+              <td>${i}</td>
+              <td><strong>${dados.nome || 'Anônimo'}</strong></td>
+              <td class="${dados.confirmado ? 'confirmado' : 'nao-confirmado'}">${dados.confirmado ? '✅ Sim' : '❌ Não'}</td>
+              <td>${dados.presenteEscolhido ? `<span class="presente">🎁 ${dados.presenteEscolhido}</span>` : '<span class="sem-presente">Nenhum</span>'}</td>
+            </tr>
+          `;
+          i++;
+        });
+        html += `</tbody></table>`;
+        div.innerHTML = html;
+
+      } catch (erro) {
+        div.innerHTML = `<p style="color:red;">❌ Erro: ${erro.message}</p>`;
+      }
+    }
+
+    async function carregarPresentesEscolhidos() {
+      const div = document.getElementById('listaPresentesEscolhidos');
+
+      try {
+        const snapshot = await db.collection("presentes").where("disponivel", "==", false).get();
+
+        if (snapshot.empty) {
+          div.innerHTML = '<p style="color:#90caf9;">Nenhum presente escolhido ainda.</p>';
+          return;
+        }
+
+        let html = `<table><thead><tr><th>Presente</th><th>Escolhido por</th></tr></thead><tbody>`;
+        snapshot.forEach(doc => {
+          const dados = doc.data();
+          html += `<tr><td>🎁 ${dados.nome || 'Sem nome'}</td><td><strong>${dados.escolhidoPor || 'Anônimo'}</strong></td></tr>`;
+        });
+        html += `</tbody></table>`;
+        div.innerHTML = html;
+
+      } catch (erro) {
+        div.innerHTML = `<p style="color:red;">❌ Erro: ${erro.message}</p>`;
+      }
+    }
+
+    carregarConvidados();
+    carregarPresentesEscolhidos();
+  </script>
+
+</body>
+</html>

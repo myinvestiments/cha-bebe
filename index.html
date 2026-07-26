@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chá de Bebê - David</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(13, 71, 161, 0.2);
+      border: 2px solid #64b5f6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ===== PANDA ANIMADO ===== */
+    .panda-top {
+      text-align: center;
+      font-size: 60px;
+      animation: pandaPula 2s infinite ease-in-out;
+      display: block;
+      margin-bottom: 5px;
+    }
+    @keyframes pandaPula {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .panda-pequeno {
+      display: inline-block;
+      font-size: 24px;
+      animation: pandaGira 3s infinite ease-in-out;
+    }
+    @keyframes pandaGira {
+      0%, 100% { transform: rotate(-5deg) scale(1); }
+      50% { transform: rotate(5deg) scale(1.1); }
+    }
+
+    /* ===== TÍTULOS ===== */
+    h1 {
+      text-align: center;
+      color: #0d47a1;
+      font-size: 32px;
+      margin-bottom: 2px;
+    }
+    h1 span {
+      color: #1976d2;
+    }
+    .subtitulo {
+      text-align: center;
+      color: #42a5f5;
+      margin-bottom: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: #e8f0fe;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 5px solid #1e88e5;
+      transition: all 0.3s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 12px rgba(30, 136, 229, 0.2);
+    }
+    .card h2 {
+      font-size: 18px;
+      color: #0d47a1;
+      margin-bottom: 12px;
+    }
+    .card h2 .panda-emoji {
+      animation: pandaGira 3s infinite ease-in-out;
+      display: inline-block;
+    }
+
+    /* ===== INPUTS E BOTÕES ===== */
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #90caf9;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      background: white;
+      transition: border 0.3s;
+    }
+    input:focus {
+      border-color: #1e88e5;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #1e88e5, #0d47a1);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 15px rgba(13, 71, 161, 0.4);
+    }
+    .btn:disabled {
+      background: #90caf9;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ===== MENSAGENS ===== */
+    .msg {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .msg-sucesso {
+      background: #c8e6c9;
+      color: #1b5e20;
+    }
+    .msg-erro {
+      background: #ffcdd2;
+      color: #c62828;
+    }
+    .msg-info {
+      background: #bbdefb;
+      color: #0d47a1;
+    }
+
+    /* ===== LISTA DE PRESENTES ===== */
+    .presente-item {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 2px solid #bbdefb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: all 0.3s;
+    }
+    .presente-item:hover {
+      border-color: #1e88e5;
+      box-shadow: 0 2px 10px rgba(30, 136, 229, 0.15);
+    }
+    .presente-item .info {
+      flex: 1;
+    }
+    .presente-item .nome {
+      font-weight: bold;
+      font-size: 17px;
+      color: #0d47a1;
+    }
+    .presente-item .descricao {
+      color: #64b5f6;
+      font-size: 14px;
+      margin-top: 3px;
+    }
+    .presente-item .btn-escolher {
+      background: linear-gradient(135deg, #43a047, #1b5e20);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .presente-item .btn-escolher:hover {
+      transform: scale(1.05);
+      box-shadow: 0 2px 10px rgba(27, 94, 32, 0.3);
+    }
+    .presente-item .btn-escolher:disabled {
+      background: #90caf9;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .vazio {
+      text-align: center;
+      color: #64b5f6;
+      padding: 30px 0;
+      font-size: 18px;
+    }
+    .vazio span {
+      font-size: 50px;
+      display: block;
+      margin-bottom: 10px;
+      animation: pandaPula 2s infinite ease-in-out;
+    }
+    .loading {
+      text-align: center;
+      color: #64b5f6;
+      padding: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #1e88e5;
+      color: white;
+      padding: 2px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-left: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #90caf9;
+      font-size: 13px;
+      margin-top: 20px;
+    }
+
+    .pandas-rodape {
+      text-align: center;
+      font-size: 30px;
+      letter-spacing: 10px;
+      margin-top: 10px;
+      animation: pandaPula 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- PANDA ANIMADO NO TOPO -->
+    <span class="panda-top">🐼</span>
+
+    <h1>🎉 Chá de Bebê do <span>David</span></h1>
+    <p class="subtitulo">👶💙 Vamos celebrar a chegada do nosso pequeno panda!</p>
+
+    <!-- ========== CARD 1: CONFIRMAR PRESENÇA ========== -->
+    <div class="card">
+      <h2>📋 <span class="panda-emoji">🐼</span> Confirme sua presença</h2>
+      <input type="text" id="nomeConvidado" placeholder="Digite seu nome completo">
+      <button class="btn" onclick="confirmarPresenca()">✅ Confirmar presença</button>
+      <div id="msgConfirmacao"></div>
+    </div>
+
+    <!-- ========== CARD 2: LISTA DE PRESENTES ========== -->
+    <div class="card">
+      <h2>🎁 <span class="panda-emoji">🐼</span> Lista de Presentes <span class="badge" id="contadorPresentes">0</span></h2>
+      <div id="listaPresentes">
+        <div class="loading">⏳ Carregando presentes...</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      💙 Obrigado por fazer parte deste momento especial! <br>
+      <span class="pandas-rodape">🐼 🐼 🐼</span>
+    </div>
+  </div>
+
+  <!-- ========== FIREBASE ========== -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // ================================================================
+    // 🔥 SUA CONFIGURAÇÃO DO FIREBASE (COLE AQUI)
+    // ================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyB2p7RxLAzShjQSEkxmo6iCkYkxD9uZayBc",
+      authDomain: "chadodavid.firebaseapp.com",
+      projectId: "chadodavid",
+      storageBucket: "chadodavid.firebasehosting.app",
+      messagingSenderId: "476758736299"
+    };
+    // ================================================================
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let nomeAtual = "";
+
+    // ================================================================
+    // CONFIRMAR PRESENÇA
+    // ================================================================
+    async function confirmarPresenca() {
+      const nome = document.getElementById('nomeConvidado').value.trim();
+      const msgDiv = document.getElementById('msgConfirmacao');
+
+      if (!nome) {
+        msgDiv.innerHTML = `<div class="msg msg-erro">❌ Digite seu nome primeiro!</div>`;
+        return;
+      }
+
+      const btn = document.querySelector('.btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Confirmando...';
+
+      try {
+        const snapshot = await db.collection("convidados")
+          .where("nome", "==", nome)
+          .get();
+
+        if (snapshot.empty) {
+          await db.collection("convidados").add({
+            nome: nome,
+            confirmado: true,
+            presenteEscolhido: ""
+          });
+          msgDiv.innerHTML = `<div class="msg msg-sucesso">✅ ${nome}, você está confirmado! 🎉🐼</div>`;
+        } else {
+          const doc = snapshot.docs[0];
+          await db.collection("convidados").doc(doc.id).update({
+            confirmado: true
+          });
+          msgDiv.innerHTML = `<div class="msg msg-info">✅ ${nome}, você já está confirmado! 🐼</div>`;
+        }
+
+        nomeAtual = nome;
+        carregarPresentes();
+
+      } catch (erro) {
+        msgDiv.innerHTML = `<div class="msg msg-erro">❌ Erro: ${erro.message}</div>`;
+      }
+
+      btn.disabled = false;
+      btn.textContent = '✅ Confirmar presença';
+    }
+
+    // ================================================================
+    // CARREGAR PRESENTES
+    // ================================================================
+    async function carregarPresentes() {
+      const div = document.getElementById('listaPresentes');
+      const contador = document.getElementById('contadorPresentes');
+
+      div.innerHTML = '<div class="loading">⏳ Carregando presentes...</div>';
+
+      try {
+        const snapshot = await db.collection("presentes")
+          .where("disponivel", "==", true)
+          .get();
+
+        contador.textContent = snapshot.size;
+
+        if (snapshot.empty) {
+          div.innerHTML = `
+            <div class="vazio">
+              <span>🐼</span>
+              Todos os presentes já foram escolhidos!<br>
+              <small style="color:#90caf9;">Muito obrigado a todos! 💙</small>
+            </div>
+          `;
+          return;
+        }
+
+        div.innerHTML = '';
+
+        snapshot.forEach(doc => {
+          const presente = doc.data();
+          const id = doc.id;
+
+          const item = document.createElement('div');
+          item.className = 'presente-item';
+          item.innerHTML = `
+            <div class="info">
+              <div class="nome">🎁 ${presente.nome}</div>
+              <div class="descricao">${presente.descricao || ''}</div>
+            </div>
+            <button class="btn-escolher" onclick="escolherPresente('${id}', '${presente.nome}')">
+              🐼 Escolher
+            </button>
+          `;
+          div.appendChild(item);
+        });
+
+      } catch (erro) {
+        div.innerHTML = `<div class="msg msg-erro">❌ Erro: ${erro.message}</div>`;
+      }
+    }
+
+    // ================================================================
+    // ESCOLHER PRESENTE
+    // ================================================================
+    async function escolherPresente(idPresente, nomePresente) {
+      if (!nomeAtual) {
+        alert('🐼 Primeiro confirme sua presença!');
+        return;
+      }
+
+      if (!confirm(`🐼 Você quer escolher "${nomePresente}" para o David?\n\nDepois de escolher, não poderá trocar.`)) {
+        return;
+      }
+
+      try {
+        await db.collection("presentes").doc(idPresente).update({
+          disponivel: false,
+          escolhidoPor: nomeAtual
+        });
+
+        const snapshot = await db.collection("convidados")
+          .where("nome", "==", nomeAtual)
+          .get();
+
+        if (!snapshot.empty) {
+          const doc = snapshot.docs[0];
+          await db.collection("convidados").doc(doc.id).update({
+            presenteEscolhido: nomePresente
+          });
+        }
+
+        alert(`✅ Parabéns! Você escolheu "${nomePresente}" para o David!\n\nMuito obrigado(a)! 🐼💙`);
+
+        carregarPresentes();
+
+      } catch (erro) {
+        alert(`❌ Erro: ${erro.message}`);
+      }
+    }
+
+    // ================================================================
+    // INICIALIZAR
+    // ================================================================
+    carregarPresentes();
+
+    document.getElementById('nomeConvidado').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        confirmarPresenca();
+      }
+    });
+
+    console.log('🐼 Chá de Bebê do David - pronto!');
+  </script>
+
+</body>
+</html>
